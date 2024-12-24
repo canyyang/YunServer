@@ -23,6 +23,11 @@ module.exports = appInfo => {
     credentials: true
   };
 
+  config.listen = {
+    host: '0.0.0.0', // 允许来自任何 IP 地址的访问
+    port: 7001,
+  };
+
   config.security = {
     csrf: {
       enable: false,
