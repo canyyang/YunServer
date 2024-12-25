@@ -20,7 +20,8 @@ module.exports = (secret) => {
         ctx.status = 200
         ctx.body = {
           msg: 'token已过期',
-          code: 401
+          code: 401,
+          err: err
         }
       }
     } else {
