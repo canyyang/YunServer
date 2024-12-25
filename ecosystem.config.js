@@ -5,11 +5,11 @@ module.exports = {
       script: 'node_modules/egg-bin', // Egg.js 启动脚本
       args: 'prod', // 开发模式，可以根据需要改为 prod 或其他模式
       env: {
-        PORT: 3001, // 设置为 3001
+        PORT: 7001, // 设置为 3001
       },
       env_production: {
         NODE_ENV: "production",
-        PORT: 3001, // 设置为 3001
+        PORT: 7001, // 设置为 3001
       }
     },
   ],
