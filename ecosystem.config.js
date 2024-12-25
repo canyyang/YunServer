@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'yun-server', // 项目名称
-      script: 'node_modules/egg-bin', // Egg.js 启动脚本
+      script: 'server.js', // Egg.js 启动脚本
       args: 'prod', // 开发模式，可以根据需要改为 prod 或其他模式
       env: {
         PORT: 7001, // 设置为 3001
