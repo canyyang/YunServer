@@ -41,6 +41,12 @@ module.exports = appInfo => {
     },
   };
 
+  config.cluster = {
+    listen: {
+      port: 3001,
+    },
+  };
+
   config.security = {
     csrf: {
       enable: false,
