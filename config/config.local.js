@@ -5,4 +5,4 @@ exports.mongoose = {
   }
 }
 
-exports.baseUrl = 'http://0.0.0.0:7001'
+exports.baseUrl = 'https://0.0.0.0:7002'
