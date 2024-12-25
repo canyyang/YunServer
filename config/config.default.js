@@ -25,7 +25,7 @@ module.exports = appInfo => {
 
   config.listen = {
     host: '0.0.0.0', // 允许来自任何 IP 地址的访问
-    port: 7001,
+    port: 3001,
     https: {
       key: '/etc/letsencrypt/live/canyyang.xyz/privkey.pem',
       cert: '/etc/letsencrypt/live/canyyang.xyz/fullchain.pem',
