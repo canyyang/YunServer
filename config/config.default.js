@@ -23,6 +23,15 @@ module.exports = appInfo => {
     credentials: true
   };
 
+  // Use port directly
+  config.port = 3001;  // 配置 Egg.js 使用端口 3001
+
+  // HTTPS 配置
+  config.https = {
+    key: '/etc/letsencrypt/live/canyyang.xyz/privkey.pem',
+    cert: '/etc/letsencrypt/live/canyyang.xyz/fullchain.pem',
+  };
+
   config.listen = {
     host: '0.0.0.0', // 允许来自任何 IP 地址的访问
     port: 3001,
