@@ -64,13 +64,13 @@ class StudentsController extends Controller {
   }
 
   async chargeStudent() {
-    const { ctx, service} = this
+    const { ctx, service } = this
 
     const data = ctx.request.body
 
     await service.student.chargeStudent(data)
 
-    await service.teacher.chargeTeaher(data)
+    await service.teacher.chargeTeacher(data)
 
     ctx.body = {
         code: 200,
