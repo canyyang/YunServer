@@ -6,10 +6,10 @@ class TeachersController extends Controller {
 
     const { filter, pageNum } = ctx.request.body
 
-    const teachers = await service.teacher.find(filterm, pageNum) 
+    const teachers = await service.teacher.find(filter, pageNum) 
 
     ctx.body = {
-        code: 0,
+        code: 200,
         message: 'success',
         data: teachers
     }
