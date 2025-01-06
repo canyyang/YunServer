@@ -4,9 +4,9 @@ class TeachersController extends Controller {
   async getTeachers() {
     const { ctx, service} = this // 从this获取service
 
-    const data = ctx.request.body
+    const { filter, pageNum } = ctx.request.body
 
-    const teachers = await service.teacher.find(data) 
+    const teachers = await service.teacher.find(filterm, pageNum) 
 
     ctx.body = {
         code: 0,
