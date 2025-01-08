@@ -58,7 +58,7 @@ module.exports = appInfo => {
 
   config.jwt = {
     username: 'yunhan',
-    secret: 'canyyang',
+    secret: 'canyang',
   };
 
   // add your user config here
