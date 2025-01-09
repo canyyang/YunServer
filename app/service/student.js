@@ -33,7 +33,7 @@ class StudentService extends Service {
 
     // 从数据库里查询带分页的数据
     const students = await this.ctx.model.Student.find(query)
-        .sort({ _id: -1 })    
+        .sort({ id: -1 })    
         .skip(skip) // 跳过的记录数
         .limit(pageSize); // 每页的记录数
 

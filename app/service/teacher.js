@@ -37,7 +37,7 @@ class TeacherService extends Service {
 
       // 按 _id 降序排序后进行分页查询
       const teachers = await this.ctx.model.Teacher.find(query)
-          .sort({ _id: -1 }) // 按 _id 降序排序
+          .sort({ id: -1 }) // 按 _id 降序排序
           .skip(skip)        // 跳过的记录数
           .limit(pageSize);  // 每页的记录数
 
