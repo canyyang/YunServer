@@ -59,6 +59,8 @@ module.exports = appInfo => {
   config.jwt = {
     username: 'yunhan',
     secret: 'canyang1212',
+    // 项目使用路由级 jwtErr 中间件，禁用 egg-jwt 全局校验，避免与 /login 等公开接口冲突
+    enable: false,
   };
 
   config.clusterClient = {

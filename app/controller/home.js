@@ -1,4 +1,5 @@
 const Controller = require('egg').Controller;
+const { extractToken } = require('../lib/jwtUtil');
 
 class HomeController extends Controller {
   async login() {
@@ -28,7 +29,7 @@ class HomeController extends Controller {
 
   async test() {
     const { ctx, app } = this;
-    const token = ctx.request.header.authorization;
+    const token = extractToken(ctx.request.header.authorization);
     const decode = await app.jwt.verify(token, app.config.jwt.secret);
     // 响应接口
     ctx.body = {
