@@ -33,19 +33,20 @@ class StudentsController extends Controller {
     const { ctx, service } = this
 
     const data = ctx.request.body
+    const students = []
 
     for (let i = 0; i < data.need.length; i++) {
-      const Students = await service.student.add({
+      const result = await service.student.add({
         ...data,
         need: data.need[i]
       })
+      students.push(result.data)
     }
-
-    
 
     ctx.body = {
       code: 200,
-      message: 'success'
+      message: 'success',
+      data: students
     }
   }
 

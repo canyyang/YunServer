@@ -1,6 +1,3 @@
-const student = require('../model/student')
-const teacher = require('../model/teacher')
-
 const Service = require('egg').Service
 
 class StudentService extends Service {
@@ -82,7 +79,7 @@ class StudentService extends Service {
       );
       return result
     } catch (err) {
-      console.error('更新失败:', err);
+      this.logger.error('[StudentService] editCharge failed: %s', err.message);
       return 'error'
     }
   }
@@ -90,14 +87,13 @@ class StudentService extends Service {
   async chargeStudent(data) {
     const { ctx } = this
     try {
-      // 查找id为1的学生并更新charge属性
       const result = await ctx.model.Student.updateOne(
-        { id: data.student },  // 查找条件
-        { $set: { teacher: data.name, teacherId: data.id } }  // 更新charge属性
+        { id: data.student },
+        { $set: { teacher: data.name, teacherId: data.id } }
       );
       return result
     } catch (err) {
-      console.error('更新失败:', err);
+      this.logger.error('[StudentService] chargeStudent failed: %s', err.message);
       return 'error'
     }
   }
@@ -120,7 +116,7 @@ class StudentService extends Service {
       );
       return result
     } catch (err) {
-      console.error('更新失败:', err);
+      this.logger.error('[StudentService] publicStudent failed: %s', err.message);
       return 'error'
     }
   }
@@ -130,8 +126,6 @@ class StudentService extends Service {
     const students = await ctx.model.Student.find({ isPublic: true })
       .select('id sex subject grade address need period score remark');
 
-    console.log(students)
-  
     return students
   }
 }

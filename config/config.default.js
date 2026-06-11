@@ -61,6 +61,10 @@ module.exports = appInfo => {
     secret: 'canyang1212',
   };
 
+  config.clusterClient = {
+    responseTimeout: 120000,
+  };
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',

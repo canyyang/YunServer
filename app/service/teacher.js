@@ -1,5 +1,3 @@
-const student = require('../model/student')
-
 const Service = require('egg').Service
 
 class TeacherService extends Service {
@@ -85,7 +83,7 @@ class TeacherService extends Service {
       );
       return result
     } catch (err) {
-      console.error('更新失败:', err);
+      this.logger.error('[TeacherService] chargeTeacher failed: %s', err.message);
       return 'error'
     }
   }

@@ -6,6 +6,8 @@ module.exports = app => {
     stage: Number,
     num: { type: Number, default: 0 },
   });
+
+  counterSchema.index({ type: 1, stage: 1 }, { unique: true });
   
   const Counter = mongoose.model('Counter', counterSchema);
   

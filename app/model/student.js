@@ -94,6 +94,12 @@ module.exports = app => {
     }
   })
 
+  StudentSchema.index({ id: 1 }, { unique: true })
+  StudentSchema.index({ charge: 1 })
+  StudentSchema.index({ teacher: 1 })
+  StudentSchema.index({ isPublic: 1 })
+  StudentSchema.index({ stage: 1, id: -1 })
+
   const Student = mongoose.model('Students', StudentSchema)
 
   return Student

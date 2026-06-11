@@ -1,5 +1,3 @@
-const student = require("./student")
-
 module.exports = app => {
   const mongoose = app.mongoose
   const Schema = mongoose.Schema
@@ -65,6 +63,12 @@ module.exports = app => {
       require: true
     }
   })
+
+  TeacherSchema.index({ id: 1 }, { unique: true })
+  TeacherSchema.index({ sex: 1 })
+  TeacherSchema.index({ subject: 1 })
+  TeacherSchema.index({ grade: 1 })
+  TeacherSchema.index({ area: 1 })
 
   const Teacher = mongoose.model('Teachers', TeacherSchema)
 

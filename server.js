@@ -1,13 +1,23 @@
-const egg = require('egg')
+const os = require('os');
+const egg = require('egg');
 
-const workers = Number(process.argv[2] || require('os').cpus().length)
+function getWorkers() {
+  if (process.env.EGG_WORKERS) {
+    const n = Number(process.env.EGG_WORKERS);
+    if (Number.isInteger(n) && n > 0) {
+      return n;
+    }
+  }
+  // 小服务器默认最多 2 个 worker，可通过环境变量 EGG_WORKERS 覆盖
+  return Math.min(os.cpus().length, 2);
+}
 
 egg.startCluster({
-  workers,  
-  baseDir: __dirname, 
-  port: 7001, 
+  workers: getWorkers(),
+  baseDir: __dirname,
+  port: 7001,
   https: {
-   key: '/etc/letsencrypt/live/canyyang.xyz/privkey.pem', // https 证书绝对目录
-   cert: '/etc/letsencrypt/live/canyyang.xyz/fullchain.pem', // https 证书绝对目录  ca: path.join(__dirname, './ssl/xxx.crt'), // https 证书绝对目录
+    key: '/etc/letsencrypt/live/canyyang.xyz/privkey.pem',
+    cert: '/etc/letsencrypt/live/canyyang.xyz/fullchain.pem',
   },
-})
+});

@@ -7,4 +7,4 @@ exports.mongoose = {
   },
 };
 
-exports.baseUrl = 'https://0.0.0.0:7001';
+exports.baseUrl = 'https://canyyang.xyz:7001';
