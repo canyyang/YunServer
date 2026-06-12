@@ -147,7 +147,7 @@ class StudentService extends Service {
       ...getCurrentStageQuery(stage),
       isPublic: true,
     })
-      .select('id sex subject grade address need period score remark')
+      .select('id sex subject grade area address need period score remark')
       .lean();
 
     return students.filter(item => isCurrentStageId(item.id, stage));

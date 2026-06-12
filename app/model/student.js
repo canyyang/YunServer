@@ -1,3 +1,5 @@
+const { AREAS } = require('../lib/areas');
+
 module.exports = app => {
   const mongoose = app.mongoose
   const Schema = mongoose.Schema
@@ -49,6 +51,11 @@ module.exports = app => {
       type: String,
       require: true
     },
+    area: {
+      type: String,
+      default: '',
+      enum: [ '', ...AREAS ],
+    },
     address: {
       type: String,
       require: true
@@ -96,6 +103,7 @@ module.exports = app => {
 
   StudentSchema.index({ id: 1 }, { unique: true })
   StudentSchema.index({ charge: 1 })
+  StudentSchema.index({ area: 1 })
   StudentSchema.index({ teacher: 1 })
   StudentSchema.index({ isPublic: 1 })
   StudentSchema.index({ stage: 1, id: -1 })

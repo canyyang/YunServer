@@ -1,4 +1,5 @@
 const Controller = require('egg').Controller;
+const { isValidArea } = require('../lib/areas');
 const { rejectUnlessCurrentStage, respondIfForbidden } = require('../lib/stage');
 
 class StudentsController extends Controller {
@@ -31,10 +32,20 @@ class StudentsController extends Controller {
   }
 
   async addStudent() {
-    const { ctx, service } = this
+    const { ctx, service } = this;
 
-    const data = ctx.request.body
-    const students = []
+    const data = ctx.request.body;
+
+    if (!isValidArea(data.area)) {
+      ctx.body = {
+        code: 400,
+        message: '请选择有效的所在区域',
+        data: null,
+      };
+      return;
+    }
+
+    const students = [];
 
     for (let i = 0; i < data.need.length; i++) {
       const result = await service.student.add({
