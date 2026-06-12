@@ -1,4 +1,5 @@
-const Service = require('egg').Service
+const Service = require('egg').Service;
+const { getCurrentStage, isCurrentStageId } = require('../lib/stage');
 
 class TeacherService extends Service {
   async find(filters = {}, pageNum = 1, pageSize = 10) {
@@ -58,16 +59,17 @@ class TeacherService extends Service {
   }
 
   async add(data) {
-    const { ctx } = this
+    const { ctx } = this;
 
-    const stage = data.stage
+    const stage = getCurrentStage();
 
-    const num = await ctx.service.counter.getNextId('teacher', stage)
+    const num = await ctx.service.counter.getNextId('teacher', stage);
 
     const teachers = await ctx.model.Teacher.create({
       ...data,
-      id: stage * 1000 + num
-    })
+      stage,
+      id: stage * 1000 + num,
+    });
   
     return {
       data: teachers
@@ -75,11 +77,14 @@ class TeacherService extends Service {
   }
 
   async chargeTeacher(data) {
-    const { ctx } = this
+    const { ctx } = this;
+    if (!isCurrentStageId(data.id) || !isCurrentStageId(data.student)) {
+      return { forbidden: true };
+    }
     try {
       const result = await ctx.model.Teacher.updateOne(
-        { id: data.id },  // 查找条件
-        { $push: { student: data.student } }  // 更新charge属性
+        { id: data.id, stage: getCurrentStage() },
+        { $push: { student: data.student } }
       );
       return result
     } catch (err) {
@@ -89,8 +94,13 @@ class TeacherService extends Service {
   }
 
   async delete(id) {
-    // 从数据库里查询
-    const result = await this.ctx.model.Teacher.deleteOne({id: id})
+    if (!isCurrentStageId(id)) {
+      return { forbidden: true };
+    }
+    const result = await this.ctx.model.Teacher.deleteOne({
+      id,
+      stage: getCurrentStage(),
+    });
   
     return result
   }

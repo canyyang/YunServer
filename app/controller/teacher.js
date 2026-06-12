@@ -1,4 +1,5 @@
-const Controller = require('egg').Controller
+const Controller = require('egg').Controller;
+const { rejectUnlessCurrentStage, respondIfForbidden } = require('../lib/stage');
 
 class TeachersController extends Controller {
   async getTeachers() {
@@ -44,17 +45,18 @@ class TeachersController extends Controller {
   }
 
   async deleteTeacher() {
-    const { ctx, service } = this
+    const { ctx, service } = this;
+    const { id } = ctx.query;
+    if (!rejectUnlessCurrentStage(ctx, Number(id))) return;
 
-    const { id } = ctx.query
-
-    const result = await service.teacher.delete(id)
+    const result = await service.teacher.delete(Number(id));
+    if (respondIfForbidden(ctx, result)) return;
 
     ctx.body = {
       code: 200,
       message: 'success',
-      data: result
-    }
+      data: result,
+    };
   }
 }
 

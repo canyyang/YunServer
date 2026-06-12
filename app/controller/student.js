@@ -1,4 +1,5 @@
-const Controller = require('egg').Controller
+const Controller = require('egg').Controller;
+const { rejectUnlessCurrentStage, respondIfForbidden } = require('../lib/stage');
 
 class StudentsController extends Controller {
   async getStudents() {
@@ -51,60 +52,66 @@ class StudentsController extends Controller {
   }
 
   async editCharge() {
-    const { ctx, service} = this // 从this获取service
+    const { ctx, service } = this;
+    const data = ctx.request.body;
+    if (!rejectUnlessCurrentStage(ctx, data.id)) return;
 
-    const data = ctx.request.body
-
-    const students = await service.student.editCharge(data)
+    const students = await service.student.editCharge(data);
+    if (respondIfForbidden(ctx, students)) return;
 
     ctx.body = {
-        code: 200,
-        message: 'success',
-        data: students
-    }
+      code: 200,
+      message: 'success',
+      data: students,
+    };
   }
 
   async chargeStudent() {
-    const { ctx, service } = this
+    const { ctx, service } = this;
+    const data = ctx.request.body;
+    if (!rejectUnlessCurrentStage(ctx, data.student)) return;
+    if (!rejectUnlessCurrentStage(ctx, data.id)) return;
 
-    const data = ctx.request.body
+    const studentResult = await service.student.chargeStudent(data);
+    if (respondIfForbidden(ctx, studentResult)) return;
 
-    await service.student.chargeStudent(data)
-
-    await service.teacher.chargeTeacher(data)
+    const teacherResult = await service.teacher.chargeTeacher(data);
+    if (respondIfForbidden(ctx, teacherResult)) return;
 
     ctx.body = {
-        code: 200,
-        message: 'success',
-    }
+      code: 200,
+      message: 'success',
+    };
   }
 
   async deleteStudent() {
-    const { ctx, service } = this
+    const { ctx, service } = this;
+    const { id } = ctx.query;
+    if (!rejectUnlessCurrentStage(ctx, Number(id))) return;
 
-    const { id } = ctx.query
-
-    const result = await service.student.delete(id) 
+    const result = await service.student.delete(Number(id));
+    if (respondIfForbidden(ctx, result)) return;
 
     ctx.body = {
-        code: 200,
-        message: 'success',
-        data: result
-    }
+      code: 200,
+      message: 'success',
+      data: result,
+    };
   }
 
   async setPublicStudent() {
-    const { ctx, service} = this
+    const { ctx, service } = this;
+    const data = ctx.request.body;
+    if (!rejectUnlessCurrentStage(ctx, data.id)) return;
 
-    const data = ctx.request.body
-
-    const result = await service.student.publicStudent(data)
+    const result = await service.student.publicStudent(data);
+    if (respondIfForbidden(ctx, result)) return;
 
     ctx.body = {
-        code: 200,
-        message: 'success',
-        data: result
-    }
+      code: 200,
+      message: 'success',
+      data: result,
+    };
   }
 
   async getPublicStudent() {

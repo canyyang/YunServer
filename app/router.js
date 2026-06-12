@@ -5,6 +5,7 @@ module.exports = app => {
   const { router, controller, middleware } = app;
   const _jwt = middleware.jwtErr(app.config.jwt.secret);
   router.post('/login', controller.home.login);
+  router.get('/admin/dataset', _jwt, controller.admin.getDataset);
   router.post('/teacher/get', _jwt, controller.teacher.getTeachers)
   router.post('/teacher/add', controller.teacher.addTeacher)
   router.get('/teacher/delete', _jwt, controller.teacher.deleteTeacher)

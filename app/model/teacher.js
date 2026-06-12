@@ -46,6 +46,10 @@ module.exports = app => {
       type: String,
       require: true
     },
+    university: {
+      type: String,
+      default: ''
+    },
     phone: {
       type: String
     },

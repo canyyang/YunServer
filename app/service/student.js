@@ -1,4 +1,9 @@
-const Service = require('egg').Service
+const Service = require('egg').Service;
+const {
+  getCurrentStage,
+  getCurrentStageQuery,
+  isCurrentStageId,
+} = require('../lib/stage');
 
 class StudentService extends Service {
 
@@ -53,16 +58,17 @@ class StudentService extends Service {
   }
 
   async add(data) {
-    const { ctx } = this
+    const { ctx } = this;
 
-    const stage = data.stage
+    const stage = getCurrentStage();
 
-    const num = await ctx.service.counter.getNextId('student', stage)
+    const num = await ctx.service.counter.getNextId('student', stage);
 
     const students = await ctx.model.Student.create({
       ...data,
-      id: stage * 1000 + num
-    })
+      stage,
+      id: stage * 1000 + num,
+    });
   
     return {
       data: students
@@ -70,12 +76,14 @@ class StudentService extends Service {
   }
 
   async editCharge(data) {
-    const { ctx } = this
+    const { ctx } = this;
+    if (!isCurrentStageId(data.id)) {
+      return { forbidden: true };
+    }
     try {
-      // 查找id为1的学生并更新charge属性
       const result = await ctx.model.Student.updateOne(
-        { id: data.id },  // 查找条件
-        { $set: { charge: data.charge } }  // 更新charge属性
+        { id: data.id, stage: getCurrentStage() },
+        { $set: { charge: data.charge } }
       );
       return result
     } catch (err) {
@@ -85,10 +93,14 @@ class StudentService extends Service {
   }
 
   async chargeStudent(data) {
-    const { ctx } = this
+    const { ctx } = this;
+    if (!isCurrentStageId(data.student) || !isCurrentStageId(data.id)) {
+      return { forbidden: true };
+    }
     try {
+      const stage = getCurrentStage();
       const result = await ctx.model.Student.updateOne(
-        { id: data.student },
+        { id: data.student, stage },
         { $set: { teacher: data.name, teacherId: data.id } }
       );
       return result
@@ -99,20 +111,27 @@ class StudentService extends Service {
   }
 
   async delete(id) {
-    // 从数据库里查询
-    const result = await this.ctx.model.Student.deleteOne({id: id})
+    if (!isCurrentStageId(id)) {
+      return { forbidden: true };
+    }
+    const result = await this.ctx.model.Student.deleteOne({
+      id,
+      stage: getCurrentStage(),
+    });
   
     return result
   }
 
   async publicStudent(data) {
-    const { ctx } = this
-    const { id, isPublic } = data
+    const { ctx } = this;
+    const { id, isPublic } = data;
+    if (!isCurrentStageId(id)) {
+      return { forbidden: true };
+    }
     try {
-      // 查找id为1的学生并更新charge属性
       const result = await ctx.model.Student.updateOne(
-        { id: id },  // 查找条件
-        { $set: { isPublic: isPublic } }
+        { id, stage: getCurrentStage() },
+        { $set: { isPublic } }
       );
       return result
     } catch (err) {
@@ -122,11 +141,16 @@ class StudentService extends Service {
   }
 
   async public() {
-    const { ctx } = this
-    const students = await ctx.model.Student.find({ isPublic: true })
-      .select('id sex subject grade address need period score remark');
+    const { ctx } = this;
+    const stage = getCurrentStage();
+    const students = await ctx.model.Student.find({
+      ...getCurrentStageQuery(stage),
+      isPublic: true,
+    })
+      .select('id sex subject grade address need period score remark')
+      .lean();
 
-    return students
+    return students.filter(item => isCurrentStageId(item.id, stage));
   }
 }
 
